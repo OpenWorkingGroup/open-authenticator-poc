@@ -20,10 +20,6 @@
     <ion-progress-bar color="medium" [value]="(token | progress) | async"></ion-progress-bar>
   </ion-card>
 </ion-content>
-00110001 
-00111001 
-00111000 
-00110110
 <ion-footer [translucent]="true" *ngIf="(tokens | async)?.length">
   <ion-toolbar>
     <ion-searchbar (ionInput)="filterTokens($event)" placeholder="Search..." autocomplete="off"></ion-searchbar>
