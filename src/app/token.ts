@@ -41,6 +41,7 @@ export class Token extends TOTP {
   constructor(token?: Token) {
     super();
     // Initialize token with TOTP defaults.
-    Object.assign(this, token ?? TOTP.defaults);
+    Object.assign(this, new TOTP(<Token>(token)) ?? TOTP.defaults);
+    console.log(this);
   }
 }
