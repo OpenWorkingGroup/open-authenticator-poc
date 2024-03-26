@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>New Account</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="submitNewAccountForm()" [strong]="true">Save</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="newAccountForm" (ngSubmit)="submitNewAccountForm()">
+    <ion-list>
+      <ion-item>
+        <ion-input
+          label="Account"
+          type="text"
+          clearInput="true"
+          placeholder="GitHub, Gmail, Work"
+          errorText="An application name is required"
+          formControlName="issuer"
+        ></ion-input>
+      </ion-item> 
+      <ion-item>
+        <ion-input
+          label="Secret"
+          type="text"
+          clearInput="true"
+          placeholder="Ex: I65VU7K5ZQL7WB4E"
+          errorText="An application secret is required"
+          formControlName="secret"
+          pattern="[A-Z2-7]+=*"
+        ></ion-input>      
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

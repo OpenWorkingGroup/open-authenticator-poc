@@ -1,0 +1,54 @@
+<ion-content [fullscreen]="true" *ngIf="(tokens | async)?.length">
+  <ion-card button *ngFor="let token of tokens | async">
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col>
+          <ion-card-header>
+            <ion-card-title>{{ token.issuer }}</ion-card-title>
+          </ion-card-header>
+        </ion-col>
+        <ion-col size="auto">
+          <div style="width: 150px">
+            <ion-chip outline slot="end" color="secondary" (click)="copyToClipboard(token.code())">
+              <ion-icon name="clipboard-outline"></ion-icon>
+              <ion-label>Copy {{ token.code() | token }}</ion-label>
+            </ion-chip>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-progress-bar color="medium" [value]="(token | progress) | async"></ion-progress-bar>
+  </ion-card>
+</ion-content>
+
+<ion-footer [translucent]="true" *ngIf="(tokens | async)?.length">
+  <ion-toolbar>
+    <ion-searchbar (ionInput)="filterTokens($event)" placeholder="Search..." autocomplete="off"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="newTokenModal()" fill="clear">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        New account
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<!-- Display startup screen when app inventory is empty -->
+<ion-content class="ion-activatable ripple-parent" (click)="newTokenModal()" fullscreen="true" *ngIf="!(tokens | async)?.length">
+  <ion-ripple-effect></ion-ripple-effect>
+  <section button id="app-modal-token-create">
+    <div id="container">
+      <strong>Open Authenticator</strong>
+      <p>The no frills multi factor authenticator.</p>
+      <p><a href="/add">Tap here!</a></p>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer id="footer" [translucent]="true" *ngIf="!(tokens | async)?.length">
+  <ion-text color="medium">
+    <p>with <ion-icon color="secondary" name="heart-outline"></ion-icon> from the <a
+        href="https://www.openworkinggroup.org" title="" target="_blank">Open Working Group</a></p>
+  </ion-text>
+</ion-footer>
+<!-- End display startup screen when app inventory is empty -->

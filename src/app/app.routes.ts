@@ -2,12 +2,18 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+    path: '',
+    title: 'MFA Tokens',
+    loadComponent: () => import('./tokens/tokens.page').then( m => m.TokensPage)
+  },
+  {
+    path: 'add',
+    title: 'New MFA Account',
+    loadComponent: () => import('./new-token/new-token.component').then((m) => m.NewTokenComponent),
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: '',
     pathMatch: 'full',
-  },
+  }
 ];
