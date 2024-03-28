@@ -1,5 +1,5 @@
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, filter, iif, map, mergeMap, of, tap } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 
 import { URI } from 'otpauth';
@@ -14,54 +14,44 @@ import { Token } from 'src/app/token';
 })
 export class TokenService {
 
+  private readonly key = { key: 'tokens' };
+
   private tokens$ = new BehaviorSubject<Array<Token>>([]);
 
   tokens = this.tokens$.asObservable();
 
-  /**
-   * Collects tokens from storage to build the `tokens$` subscribeable. 
-   * 
-   * TODO: We need strip the extraneous properties before storing and 
-   * reconstituce at init. Typecast here to convert classes?
-   */
   getTokens() {
-    Preferences.get({key: 'tokens'}).then((preferences) => {
+    Preferences.get({ key: 'tokens' }).then((preferences) => {
       const tokens = JSON.parse(preferences.value || '[]');
       this.tokens$.next(tokens.map((token: string) => new Token(<Token>(URI.parse(token)))));
     });
   }
 
-  /**
-   * Adds new Token to collection and save.
-   * 
-   * TODO: We need strip the extraneous properties before storing and 
-   * reconstituce at init. Typecast here to convert classes?
-   * @param token 
-   */
   saveToken(token: Token) {
     this.tokens
-      .pipe(
-        tap((tokens: Array<Token>) => tokens.push(new Token(token))),
-        map((tokens: Array<Token>) => tokens.map((token: Token) => token.toString()))
-      )
-      .subscribe(async tokens => {
-        await Preferences.set({key: 'tokens', value: JSON.stringify(tokens)}); 
-    });
+      .pipe(map(tokens => tokens.push(new Token(token))))
+      .subscribe(() => this.saveTokens())
+      .unsubscribe()
   }
-}
 
-/**
- * The base32Challenge can be used to validate
- * the input passed as the token secret.
- * 
- * @param test 
- */
-export function base32Challenge(test: string) {
-  try {
-    test.length % 8 === 0 && (/^[A-Z2-7]+=*$/).test(test);
-  } catch (error) {
-    console.error(error);
-    throw Error("Invalid token secret.");
+  deleteToken(tokenId: number) {
+    this.tokens
+      .pipe(map(tokens => tokens.splice(tokenId, 1)))
+      .subscribe(() => this.saveTokens())
+      .unsubscribe();
+  }
+
+  private saveTokens() {
+    this.tokens
+      .pipe(map(tokens => tokens.map(token => token.toString())))
+      .subscribe(tokens => {
+        if (tokens.length) {
+          Preferences.set({ ...this.key, value: JSON.stringify(tokens) })
+        } else {
+          Preferences.remove(this.key);
+        }
+      })
+      .unsubscribe();
   }
 }
 
@@ -77,7 +67,7 @@ export class TokenPipe implements PipeTransform {
    * @param token 
    * @returns 
    */
-  transform(token: string) { 
+  transform(token: string) {
     return token.replace(/(\d{3})(\d{3})/, "$1 $2")
   }
 }
@@ -97,7 +87,7 @@ export class TimeoutPipe implements PipeTransform {
   transform(token: Token) {
     return token.timeout
       .pipe(
-        map(counter => (counter/token.period))
+        map(counter => (counter / token.period))
       )
   };
 }

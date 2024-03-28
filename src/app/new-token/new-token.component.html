@@ -16,19 +16,25 @@
         <ion-input
           label="Account"
           type="text"
-          clearInput="true"
           placeholder="GitHub, Gmail, Work"
-          errorText="An application name is required"
+          errorText="Account name required"
           formControlName="issuer"
         ></ion-input>
       </ion-item> 
+      <!-- <ion-item>
+        <ion-input
+          label="Label"
+          type="text"
+          placeholder="Additional descriptors"
+          formControlName="label"
+        ></ion-input>
+      </ion-item>  -->
       <ion-item>
         <ion-input
           label="Secret"
           type="text"
-          clearInput="true"
-          placeholder="Ex: I65VU7K5ZQL7WB4E"
-          errorText="An application secret is required"
+          placeholder="Application secret"
+          errorText="Secret is required"
           formControlName="secret"
           pattern="[A-Z2-7]+=*"
         ></ion-input>      

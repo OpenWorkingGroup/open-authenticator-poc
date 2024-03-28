@@ -37,6 +37,7 @@ export class NewTokenComponent implements OnInit {
   ngOnInit(): void {
     this.newAccountForm = this.formBuilder.group({
       issuer: [null, Validators.required],
+      label: [''],
       secret: ['I65VU7K5ZQL7WB4E', [Validators.required, Validators.pattern(/^[A-Z2-7]+=*$/)]]
     })
   }
@@ -48,6 +49,21 @@ export class NewTokenComponent implements OnInit {
   //     return forbidden ? { forbiddenName: { value: control.value } } : null;
   //   };
   // }
+
+  /**
+   * The base32Challenge can be used to validate
+   * the input passed as the token secret.
+   * 
+   * @param test 
+   */
+  base32Challenge(test: string) {
+    try {
+      test.length % 8 === 0 && (/^[A-Z2-7]+=*$/).test(test);
+    } catch (error) {
+      console.error(error);
+      throw Error("Invalid token secret.");
+    }
+  }
 
   async submitNewAccountForm() {
     if (this.newAccountForm.valid) {

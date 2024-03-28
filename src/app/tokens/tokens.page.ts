@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 
 import { Clipboard } from '@capacitor/clipboard';
 
 import { ToastController, ActionSheetController, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, IonContent, IonProgressBar, IonGrid, IonCard, IonRow, IonCol, IonCardHeader, IonCardTitle, IonCardContent, IonLabel, IonChip, IonHeader, IonTitle, IonText, IonCardSubtitle, IonBadge, IonRippleEffect, IonNote } from "@ionic/angular/standalone";
-import { addOutline, clipboardOutline, informationCircleOutline, heartOutline } from 'ionicons/icons';
+import { addOutline, informationCircleOutline, heartOutline, trashOutline, clipboardOutline, copyOutline } from 'ionicons/icons';
 
 import { addIcons } from 'ionicons';
 
@@ -23,11 +23,11 @@ import { Token } from 'src/app/token';
   standalone: true,
   imports: [IonNote, IonRippleEffect, IonBadge, IonCardSubtitle, IonText, IonTitle, IonHeader, IonChip, IonLabel, IonCardContent, IonCardTitle, IonCardHeader, IonCol, IonRow, IonCard, IonGrid, IonProgressBar, IonContent, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, CommonModule, TokenPipe, TimeoutPipe]
 })
-export class TokensPage {
+export class TokensPage implements OnInit, OnDestroy {
 
-  tokens: Observable<Array<Token>>;
+  tokens!: Observable<Array<Token>>;
 
-  filteredTokens: Observable<Array<Token>>;
+  filteredTokens!: Observable<Array<Token>>;
 
   /**
    * 
@@ -36,7 +36,10 @@ export class TokensPage {
    * @param router 
    */
   constructor(private actionSheetCtrl: ActionSheetController, private toastController: ToastController, private tokenService: TokenService, private router: Router) {
-    addIcons({ addOutline, clipboardOutline, informationCircleOutline, heartOutline });
+    addIcons({ addOutline, informationCircleOutline, heartOutline, trashOutline, clipboardOutline, copyOutline });
+  }
+
+  ngOnInit(): void {
     this.tokens = this.filteredTokens = this.tokenService.tokens;
   }
 
@@ -54,12 +57,17 @@ export class TokensPage {
    * @param filter 
    */
   filterTokens(event: any) {
-    this.tokens = this.tokenService.tokens.pipe(
-      map((tokens: Array<Token>) => tokens.filter(token => token.issuer.toLocaleLowerCase().includes(event.target.value.toLowerCase()))),
-    );
+    this.tokens = this.tokenService.tokens
+      .pipe(
+        map((tokens: Array<Token>) => tokens.filter(token => token.issuer.toLocaleLowerCase().includes(event.target.value.toLowerCase()))),
+      );
   }
 
   newTokenModal = () => this.router.navigate(['add']);
+
+  deleteToken(tokenId: number) {
+    this.tokenService.deleteToken(tokenId);
+  }
 
   /**
    * We toast copy actions.
@@ -77,27 +85,8 @@ export class TokensPage {
     await toast.present();
   }
 
-  async presentActionSheet(token: Token) {
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Actions',
-      buttons: [
-        {
-          text: 'Delete',
-          role: 'destructive',
-          data: {
-            action: 'delete',
-          },
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          data: {
-            action: 'cancel',
-          },
-        },
-      ],
-    });
-
-    await actionSheet.present();
-  }  
+  ngOnDestroy(): void {
+    // TODO: Implement unsubscribe
+    console.log('Cleanup subscriptions.')
+  }
 }

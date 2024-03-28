@@ -26,6 +26,16 @@
     text-decoration: none;
   }
   
+  ion-card-header {
+    max-width: 220px;
+  }
+  
+    ion-card-header ion-card-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
   #footer {
     font-size: 12px;
     text-align: center;

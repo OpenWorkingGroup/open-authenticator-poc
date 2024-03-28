@@ -1,19 +1,25 @@
 <ion-content [fullscreen]="true" *ngIf="(tokens | async)?.length">
-  <ion-card button *ngFor="let token of tokens | async">
+  <ion-card button *ngFor="let token of (tokens | async); index as i;">
     <ion-grid>
       <ion-row class="ion-align-items-center">
         <ion-col>
           <ion-card-header>
             <ion-card-title>{{ token.issuer }}</ion-card-title>
+            <!-- <ion-card-subtitle *ngIf="token.label">{{ token.label }}</ion-card-subtitle> -->
           </ion-card-header>
         </ion-col>
         <ion-col size="auto">
-          <div style="width: 150px">
-            <ion-chip outline slot="end" color="secondary" (click)="copyToClipboard(token.code())">
-              <ion-icon name="clipboard-outline"></ion-icon>
-              <ion-label>Copy {{ token.code() | token }}</ion-label>
-            </ion-chip>
-          </div>
+          <!-- <div style="width: 275px"> -->
+            <ion-button fill="clear" shape="round" color="medium" size="small" (click)="deleteToken(i)">
+              <ion-icon slot="icon-only" name="trash-outline" size="small"></ion-icon>
+            </ion-button>
+            <ion-button expland="block" fill="outline" shape="round" color="secondary" (click)="copyToClipboard(token.code())">
+              <ion-icon name="copy-outline" slot="start"></ion-icon>
+              Copy {{ token.code() | token }} 
+              <!-- <ion-icon name="clipboard-outline" slot="start"></ion-icon> -->
+              <!-- Copied! -->
+            </ion-button>
+          <!-- </div> -->
         </ion-col>
       </ion-row>
     </ion-grid>
