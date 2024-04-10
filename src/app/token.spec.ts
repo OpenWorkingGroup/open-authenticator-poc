@@ -1,4 +1,4 @@
-import { Token } from './token';
+import { Token } from './Token.1';
 
 describe('Token', () => {
   it('should create an instance', () => {

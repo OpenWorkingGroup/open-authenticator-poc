@@ -1,34 +1,28 @@
-import { timer, map, take, tap, repeat, finalize, takeWhile } from 'rxjs';
-
-import { TOTP } from 'otpauth';
+import { timer, map } from 'rxjs';
+import * as OTPAuth from 'otpauth';
 
 /**
  * `Token` is an overlay to the `OTPAuth.TOTP` and `OTPAuth.HOTP` 
  * classes providing functional accessors and modifiers.
+ * 
+ * TODO: convert class name to TOTP. HOTP may need a "decorator"
+ * similar to this as well... We need to provide functionality for 
+ * both token types.
+ * 
+ * `export class TOTP extends OTPAuth.TOTP {}`
  */
-export class Token extends TOTP {
-
+export class Token extends OTPAuth.TOTP {
+  
   /**
-   * Provides an instance specific interface for working
-   * with the timer.
+   * Provides an instance specific timer based on 
+   * the TOTP algorithm `TOTP = HOTP(K, T)`.
    */
-  timeout = timer(0, 1000)
-    .pipe(
-      // Reverse incrementer for countdown effect
-      map(counter => this.period - counter), 
-      // Adding 1 so countdown can hit zero
-      take(this.period + 1),
-      // Reset the code
-      finalize(() => this.code()),
-      repeat()
+  timeout = timer(0, 1000).pipe(
+      map(() => 
+        Math.floor(this.period - (new Date().getTime() / 1000) % this.period)
+      )
     );
 
-  /**
-   * Generate a TOTP code.
-   * @returns 
-   */
-  code = () => TOTP.generate(Object(this));
-  
   /**
    * The Token object is an overlay to the OTPAuth.TOTP
    * and OTPAuth.HOTP classes providing functional 
@@ -38,9 +32,9 @@ export class Token extends TOTP {
    * Override defaults by passing values as `token`.
    * @param token 
    */
-  constructor(token?: Token) {
+  constructor(token: Token) {
     super();
     // Initialize token with TOTP defaults.
-    Object.assign(this, new TOTP(<Token>(token)) ?? TOTP.defaults);
+    Object.assign(this, new OTPAuth.TOTP(token));
   }
 }
