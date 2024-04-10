@@ -1,92 +1,97 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, map } from 'rxjs';
 
+import { ActionSheetController, AlertController, ToastController, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, IonContent, IonProgressBar, IonGrid, IonCard, IonRow, IonCol, IonCardHeader, IonCardTitle, IonCardContent, IonLabel, IonHeader, IonTitle, IonText, IonCardSubtitle, IonRippleEffect, IonToast, IonActionSheet, IonItem, IonList, IonFab, IonFabButton, IonFabList, IonInput } from "@ionic/angular/standalone";
 import { Clipboard } from '@capacitor/clipboard';
 
-import { ToastController, ActionSheetController, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, IonContent, IonProgressBar, IonGrid, IonCard, IonRow, IonCol, IonCardHeader, IonCardTitle, IonCardContent, IonLabel, IonChip, IonHeader, IonTitle, IonText, IonCardSubtitle, IonBadge, IonRippleEffect, IonNote } from "@ionic/angular/standalone";
-import { addOutline, informationCircleOutline, heartOutline, trashOutline, clipboardOutline, copyOutline } from 'ionicons/icons';
-
 import { addIcons } from 'ionicons';
+import { addOutline, heartOutline, clipboardOutline, copyOutline } from 'ionicons/icons';
 
-import { TokenService, TokenPipe, TimeoutPipe } from 'src/app/token.service';
-import { Token } from 'src/app/token';
+import { TokenService, TokenPipe, TimeoutPipe, FilterPipe } from 'src/app/token.service';
 
-/**
- * TODO: Finish detailing this component. 
- */
+import { NewTokenComponent } from "../new-token/new-token.component";
+import { Token } from '../token';
+
+import { LongPressDirective } from '../long-press.directive';
+
 @Component({
   selector: 'app-tokens',
   templateUrl: './tokens.page.html',
   styleUrls: ['./tokens.page.scss'],
   standalone: true,
-  imports: [IonNote, IonRippleEffect, IonBadge, IonCardSubtitle, IonText, IonTitle, IonHeader, IonChip, IonLabel, IonCardContent, IonCardTitle, IonCardHeader, IonCol, IonRow, IonCard, IonGrid, IonProgressBar, IonContent, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, CommonModule, TokenPipe, TimeoutPipe]
+  imports: [IonInput, IonFabList, IonFabButton, IonFab, IonList, IonItem, IonActionSheet, IonToast, IonRippleEffect, IonCardSubtitle, IonText, IonTitle, IonHeader, IonLabel, IonCardContent, IonCardTitle, IonCardHeader, IonCol, IonRow, IonCard, IonGrid, IonProgressBar, IonContent, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, CommonModule, TokenPipe, TimeoutPipe, FilterPipe, NewTokenComponent, LongPressDirective]
 })
-export class TokensPage implements OnInit, OnDestroy {
+export class TokensPage {
 
-  tokens!: Observable<Array<Token>>;
+  private readonly tokenService = inject(TokenService);
 
-  filteredTokens!: Observable<Array<Token>>;
+  tokens = this.tokenService.tokens;
+
+  filterBy: string | undefined;
 
   /**
    * 
-   * @param toastController 
-   * @param tokenService 
    * @param router 
    */
-  constructor(private actionSheetCtrl: ActionSheetController, private toastController: ToastController, private tokenService: TokenService, private router: Router) {
-    addIcons({ addOutline, informationCircleOutline, heartOutline, trashOutline, clipboardOutline, copyOutline });
+  constructor(
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private router: Router) {
+    addIcons({ addOutline, heartOutline, clipboardOutline, copyOutline });
   }
 
-  ngOnInit(): void {
-    this.tokens = this.filteredTokens = this.tokenService.tokens;
-  }
+  filterTokens = (q: string) => this.tokenService.filter(q);
 
-  /**
-   * Copy MFA token to clipboard and signal success.
-   * @param string 
-   */
-  async copyToClipboard(string: string) {
-    await Clipboard.write({ string });
-    this.toast({ message: `Code copied!`, icon: 'clipboard-outline' });
-  }
-
-  /**
-   * Applies search filter to tokens.
-   * @param filter 
-   */
-  filterTokens(event: any) {
-    this.tokens = this.tokenService.tokens
-      .pipe(
-        map((tokens: Array<Token>) => tokens.filter(token => token.issuer.toLocaleLowerCase().includes(event.target.value.toLowerCase()))),
-      );
-  }
-
-  newTokenModal = () => this.router.navigate(['add']);
-
-  deleteToken(tokenId: number) {
-    this.tokenService.deleteToken(tokenId);
-  }
-
-  /**
-   * We toast copy actions.
-   * TODO: Replace copy toasy w/ inline/inplace note: Copied! (and reset after 3seconds...)?
-   * @param options 
-   */
-  async toast(options: any) {
-    const toast = await this.toastController.create({
-      ...options,
-      duration: 750,
-      position: 'bottom',
-      translucent: true
+  async copyToClipboard(ev: any, string: string) {
+    console.log(ev.srcElement);
+    Clipboard.write({ string });
+    
+    const toast = await this.toastCtrl.create({
+      message: 'Copied!',
+      icon: 'clipboard-outline',
+      duration: 500
     });
 
     await toast.present();
   }
 
-  ngOnDestroy(): void {
-    // TODO: Implement unsubscribe
-    console.log('Cleanup subscriptions.')
+  newTokenModal = () => this.router.navigate(['add',]);
+
+  async presentActionSheet(t: Token) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Actions',
+      buttons: [
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: async () => {
+            const alert = await this.alertCtrl.create({
+              header: `Delete ${t.issuer}`,
+              buttons: [
+                {
+                  text: 'Delete',
+                  role: 'destructive',
+                  handler: () => this.tokenService.delete(t)
+                },
+                {
+                  text: 'Cancel',
+                  role: 'cancel'
+                }
+              ],
+            });
+
+            await alert.present();
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await actionSheet.present();
   }
 }
