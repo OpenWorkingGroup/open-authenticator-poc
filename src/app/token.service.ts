@@ -1,9 +1,8 @@
 import { Injectable, Pipe, PipeTransform } from '@angular/core';
-import { BehaviorSubject, Observable, filter, iif, map, mergeMap, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, filter, from, map, merge, switchMap, timer, toArray } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
 
 import { URI } from 'otpauth';
-
 import { Token } from 'src/app/token';
 
 /**
@@ -13,55 +12,50 @@ import { Token } from 'src/app/token';
   providedIn: 'root'
 })
 export class TokenService {
-
   private readonly key = { key: 'tokens' };
+  private readonly tokens$ = new BehaviorSubject<Token[]>([]);
+  private readonly filter$ = new Subject<string>();
+  readonly tokens = merge(this.tokens$, this.filter$.pipe(
+    switchMap(q =>
+      from(this.tokens$.value).pipe(
+        filter((t) => t.issuer.toLowerCase().includes(q.toLowerCase())),
+        toArray()
+      )
+    )))
 
-  private tokens$ = new BehaviorSubject<Array<Token>>([]);
-
-  tokens = this.tokens$.asObservable();
-
-  getTokens() {
-    Preferences.get({ key: 'tokens' }).then((preferences) => {
-      const tokens = JSON.parse(preferences.value || '[]');
-      this.tokens$.next(tokens.map((token: string) => new Token(<Token>(URI.parse(token)))));
-    });
+  constructor() {
+    Preferences.get(this.key)
+      .then(preferences => JSON.parse(preferences.value || '[]'))
+      .then((tt: string[]) => this.tokens$.next(tt.map(t => new Token(<Token>(URI.parse(t))))));
   }
 
-  saveToken(token: Token) {
-    this.tokens
-      .pipe(map(tokens => tokens.push(new Token(token))))
-      .subscribe(() => this.saveTokens())
-      .unsubscribe()
+  filter = (q: string) => this.filter$.next(q);
+
+  create(t: Token) {
+    this.tokens$.next(this.tokens$.value.concat(new Token(t)));
+    this.saveTokens();
   }
 
-  deleteToken(tokenId: number) {
-    this.tokens
-      .pipe(map(tokens => tokens.splice(tokenId, 1)))
-      .subscribe(() => this.saveTokens())
-      .unsubscribe();
+  delete(t: Token) {
+    this.tokens$.next(this.tokens$.value.filter((tt) => tt.secret !== t.secret));
+    this.saveTokens();
   }
 
   private saveTokens() {
-    this.tokens
-      .pipe(map(tokens => tokens.map(token => token.toString())))
-      .subscribe(tokens => {
-        if (tokens.length) {
-          Preferences.set({ ...this.key, value: JSON.stringify(tokens) })
-        } else {
-          Preferences.remove(this.key);
-        }
-      })
-      .unsubscribe();
+    const tt = this.tokens$.value.map(t => t.toString());
+
+    if (tt.length) {
+      Preferences.set({ ...this.key, value: JSON.stringify(tt) })
+    } else {
+      Preferences.remove(this.key)
+    }
   }
 }
 
-@Pipe({
-  name: 'token',
-  standalone: true
-})
+@Pipe({ name: 'token', standalone: true })
 export class TokenPipe implements PipeTransform {
   /**
-   * Split MFA code into two, three digit parts
+   * Split MFA code into two three digit parts
    * separated by a space.
    * 
    * @param token 
@@ -72,10 +66,7 @@ export class TokenPipe implements PipeTransform {
   }
 }
 
-@Pipe({
-  name: 'progress',
-  standalone: true
-})
+@Pipe({ name: 'progress', standalone: true })
 export class TimeoutPipe implements PipeTransform {
   /**
    * Provides calculus for decrementing an `ion-progress`
@@ -85,9 +76,37 @@ export class TimeoutPipe implements PipeTransform {
    * @returns 
    */
   transform(token: Token) {
-    return token.timeout
-      .pipe(
-        map(counter => (counter / token.period))
-      )
+    return timer(0, 1000).pipe(
+      map(() =>
+        Math.floor(token.period - (new Date().getTime() / 1000) % token.period)
+      ),
+      map(timeout => timeout / token.period)
+    )
   };
+}
+
+@Pipe({ name: 'filter', standalone: true, pure: false })
+export class FilterPipe implements PipeTransform {
+
+  /**
+   * 
+   * @param Tokens[]
+   * @param query
+   * @returns 
+   */
+  transform(tt: Token[], q: string): Token[] {
+    return tt;
+    // return tt.filter((t) => t.issuer.toLowerCase().includes(q.toLowerCase()));
+    console.log('pipe run');
+    // if (tt.length === 0 || !q) {
+    //   return tt;
+    // }
+    // let ftt: Token[] = [];
+    // for (let t of tt) {
+    //   if (t.issuer.toLowerCase().includes(q.toLowerCase())) {
+    //     ftt.push(t);
+    //   }
+    // }
+    return [new Token(<Token>{})];
+  }
 }
