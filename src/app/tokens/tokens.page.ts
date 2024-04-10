@@ -51,6 +51,7 @@ export class TokensPage {
     const toast = await this.toastCtrl.create({
       message: 'Copied!',
       icon: 'clipboard-outline',
+      positionAnchor: 'footer',
       duration: 500
     });
 
