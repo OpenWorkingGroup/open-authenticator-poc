@@ -1,34 +1,27 @@
-<ion-content [fullscreen]="true" *ngIf="(tokens | async)?.length">
-  <ion-card button *ngFor="let token of (tokens | async); index as i;">
-    <ion-grid>
-      <ion-row class="ion-align-items-center">
-        <ion-col>
-          <ion-card-header>
-            <ion-card-title>{{ token.issuer }}</ion-card-title>
-            <!-- <ion-card-subtitle *ngIf="token.label">{{ token.label }}</ion-card-subtitle> -->
-          </ion-card-header>
-        </ion-col>
-        <ion-col size="auto">
-          <!-- <div style="width: 275px"> -->
-            <ion-button fill="clear" shape="round" color="medium" size="small" (click)="deleteToken(i)">
-              <ion-icon slot="icon-only" name="trash-outline" size="small"></ion-icon>
-            </ion-button>
-            <ion-button expland="block" fill="outline" shape="round" color="secondary" (click)="copyToClipboard(token.code())">
-              <ion-icon name="copy-outline" slot="start"></ion-icon>
-              Copy {{ token.code() | token }} 
-              <!-- <ion-icon name="clipboard-outline" slot="start"></ion-icon> -->
-              <!-- Copied! -->
-            </ion-button>
-          <!-- </div> -->
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <ion-progress-bar color="medium" [value]="(token | progress) | async"></ion-progress-bar>
+<ion-content fullscreen="true" *ngIf="(tokens| async)?.length">
+  <ion-card button appLongPress (appLongPressDo)="presentActionSheet(token)" *ngFor="let token of tokens | async">
+    <ion-row class="ion-align-items-center">
+      <ion-col>
+        <ion-card-header>
+          <ion-card-title>{{ token.issuer }}</ion-card-title>
+          <ion-card-subtitle>Valid for {{ token.timeout | async }} seconds</ion-card-subtitle> 
+        </ion-card-header>
+      </ion-col>
+      <ion-col size="auto">
+        <ion-button fill="outline" shape="round" color="secondary" (click)="copyToClipboard($event, token.generate())">
+          <ion-icon name="copy-outline" slot="start"></ion-icon>
+          Copy {{ token.generate() | token }}
+          <!-- <ion-icon name="clipboard-outline" slot="start"></ion-icon> -->
+          <!-- Copied! -->
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-progress-bar color="medium" [value]="token | progress| async"></ion-progress-bar>
   </ion-card>
 </ion-content>
-<ion-footer [translucent]="true" *ngIf="(tokens | async)?.length">
+<ion-footer id="footer" translucent="true" *ngIf="(tokens | async)?.length">
   <ion-toolbar>
-    <ion-searchbar (ionInput)="filterTokens($event)" placeholder="Search..." autocomplete="off"></ion-searchbar>
+    <ion-searchbar ngModel="filterBy" type="search" animated="true" inputmode="search" maxlength="25" placeholder="Search..." autocomplete="off"></ion-searchbar>
     <ion-buttons slot="end">
       <ion-button (click)="newTokenModal()" fill="clear">
         <ion-icon slot="start" name="add-outline"></ion-icon>
@@ -39,21 +32,20 @@
 </ion-footer>
 
 <!-- Display startup screen when app inventory is empty -->
-<ion-content class="ion-activatable ripple-parent" (click)="newTokenModal()" fullscreen="true" *ngIf="!(tokens | async)?.length">
+<ion-content class="ion-activatable ripple-parent" (click)="newTokenModal()" *ngIf="!(tokens | async)?.length">
   <ion-ripple-effect></ion-ripple-effect>
-  <section button id="app-modal-token-create">
-    <div id="container">
-      <strong>Open Authenticator</strong>
-      <p>The no frills multi factor authenticator.</p>
-      <p><a href="/add">Tap here!</a></p>
-    </div>
-  </section>
+  <div class="center-middle">
+    <h1>Open Authenticator</h1>
+    <p><ion-text color="medium">The no frills multi factor authenticator.</ion-text></p>
+    <p><a href="/add">Tap anywhere start!</a></p>
+  </div>
 </ion-content>
-
-<ion-footer id="footer" [translucent]="true" *ngIf="!(tokens | async)?.length">
-  <ion-text color="medium">
-    <p>with <ion-icon color="secondary" name="heart-outline"></ion-icon> from the <a
-        href="https://www.openworkinggroup.org" title="" target="_blank">Open Working Group</a></p>
-  </ion-text>
+<ion-footer class="startup-screen-footer" translucent="true" *ngIf="!(tokens | async)?.length">
+  <p>
+    <ion-text color="medium">
+      with <ion-icon color="secondary" name="heart-outline"></ion-icon> from the
+      <a href="https://www.openworkinggroup.org" title="" target="_blank">Open Working Group</a>
+    </ion-text>
+  </p>
 </ion-footer>
 <!-- End display startup screen when app inventory is empty -->
