@@ -4,7 +4,7 @@
     "@ionic/angular"
   ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript, typescript]": {
+  "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
