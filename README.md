@@ -64,3 +64,16 @@ Asked in Ionic Discord channel. Solution provided by Kaoschuks
  
  # build macbook app
  npm run electron:mac
+
+
+ ## Model diagram
+ Important features, labels, OTP Algorithm (HOTP/TOTP);
+
+ These tokens represent Accounts they need to access. Is this the identity?
+
+interface Account
+
+ class Account
+    token: HOTP|TOTP instnace
+    labels: Array<string>
+

@@ -14,10 +14,10 @@ import { take, takeUntil } from 'rxjs/operators';
 })
 export class LongPressDirective {
 
-  @Input() longPressTimeout: number = 500;
+  @Input() longPressTimeout = 500;
   @Output() appLongPressDo: EventEmitter<number> = new EventEmitter();
 
-  private readonly handle: Subject<boolean> = new Subject();
+  private readonly handle = new Subject();
 
   @HostListener('touchend', ['$event'])
   @HostListener('touchcancel', ['$event'])

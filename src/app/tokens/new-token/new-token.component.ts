@@ -1,9 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonContent, IonToolbar, IonTitle, IonInput, IonModal, IonButton, IonButtons, IonItem, IonList } from "@ionic/angular/standalone";
+import { IonHeader, IonContent, IonToolbar, IonTitle, IonProgressBar, IonInput, IonModal, IonButton, IonButtons, IonItem, IonList } from "@ionic/angular/standalone";
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
-import { TokenService } from 'src/app/token.service';
+import { TokenService } from 'src/app/token/token.module';
+import { DropZoneService } from 'src/app/drop-zone/drop-zone.module';
+import { CommonModule } from '@angular/common';
 
 /**
  * TODO: Finish detailing this component. 
@@ -13,11 +15,14 @@ import { TokenService } from 'src/app/token.service';
   templateUrl: './new-token.component.html',
   styleUrls: ['./new-token.component.scss'],
   standalone: true,
-  imports: [IonList, IonItem, IonHeader, IonContent, IonToolbar, IonTitle, IonInput, IonModal, IonButton, IonButtons, ReactiveFormsModule]
+  imports: [CommonModule, IonList, IonItem, IonHeader, IonContent, IonToolbar, IonTitle,IonProgressBar, IonInput, IonModal, IonButton, IonButtons, ReactiveFormsModule]
 })
 export class NewTokenComponent implements OnInit {
 
-  tokenService = inject(TokenService);
+  private readonly tokenService = inject(TokenService);
+  private readonly dropZoneService = inject(DropZoneService);
+
+  readonly uploadedFiles = signal<File[]>([]);
 
   newAccountForm!: FormGroup;
 
@@ -29,24 +34,22 @@ export class NewTokenComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router
-  ) { }
+  ) { 
+    this.dropZoneService.files.subscribe((files) => this.uploadedFiles.set(files));
+  }
 
   ngOnInit(): void {
     this.newAccountForm = this.formBuilder.group({
       issuer: [null, Validators.required],
-      label: [''],
+      label: [null, ''],
       secret: ['I65VU7K5ZQL7WB4E', [Validators.required, Validators.pattern(/^[A-Z2-7]+=*$/), this.base32Challenge()]]
     })
   }
 
-  /**
-   * The base32Challenge can be used to validate
-   * the input passed as the token secret.
-   */
   base32Challenge(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const forbidden = control.value.length % 8 === 0;
-      console.log(forbidden);
+      // console.log(forbidden);
       return !forbidden ? { invalideBase32: { value: control.value } } : null;
     };
   }

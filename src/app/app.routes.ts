@@ -9,7 +9,7 @@ export const routes: Routes = [
   {
     path: 'add',
     title: 'New MFA Account',
-    loadComponent: () => import('./new-token/new-token.component').then((m) => m.NewTokenComponent),
+    loadComponent: () => import('./tokens/new-token/new-token.component').then((m) => m.NewTokenComponent),
   },
   {
     path: '',

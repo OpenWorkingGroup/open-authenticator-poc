@@ -1,3 +1,5 @@
-<ion-app>
+<ion-app appDropZone (dropZoneEnter)="onDropZoneEnter()" (dropZoneExit)="onDropZoneExit()" (dropZoneDrop)="onDropZoneDrop($event)">
+  <!-- Toggle dropzone overlay here -->
+  <!-- <div *ngIf="dropZoneActive">Hello!</div> -->
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

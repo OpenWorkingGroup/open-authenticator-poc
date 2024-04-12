@@ -8,19 +8,17 @@ import { Clipboard } from '@capacitor/clipboard';
 import { addIcons } from 'ionicons';
 import { addOutline, heartOutline, clipboardOutline, copyOutline } from 'ionicons/icons';
 
-import { TokenService, TokenPipe, TimeoutPipe, FilterPipe } from 'src/app/token.service';
+import { SharedServicesModule } from '../shared/shared.module';
+import { TokenModule, TokenService, Token } from '../token/token.module';
 
-import { NewTokenComponent } from "../new-token/new-token.component";
-import { Token } from '../token';
-
-import { LongPressDirective } from '../long-press.directive';
+import { NewTokenComponent } from "./new-token/new-token.component";
 
 @Component({
   selector: 'app-tokens',
   templateUrl: './tokens.page.html',
   styleUrls: ['./tokens.page.scss'],
   standalone: true,
-  imports: [IonInput, IonFabList, IonFabButton, IonFab, IonList, IonItem, IonActionSheet, IonToast, IonRippleEffect, IonCardSubtitle, IonText, IonTitle, IonHeader, IonLabel, IonCardContent, IonCardTitle, IonCardHeader, IonCol, IonRow, IonCard, IonGrid, IonProgressBar, IonContent, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, CommonModule, TokenPipe, TimeoutPipe, FilterPipe, NewTokenComponent, LongPressDirective]
+  imports: [SharedServicesModule, IonInput, IonFabList, IonFabButton, IonFab, IonList, IonItem, IonActionSheet, IonToast, IonRippleEffect, IonCardSubtitle, IonText, IonTitle, IonHeader, IonLabel, IonCardContent, IonCardTitle, IonCardHeader, IonCol, IonRow, IonCard, IonGrid, IonProgressBar, IonContent, IonFooter, IonToolbar, IonSearchbar, IonButtons, IonButton, IonIcon, CommonModule, NewTokenComponent, TokenModule]
 })
 export class TokensPage {
 
@@ -28,7 +26,7 @@ export class TokensPage {
 
   tokens = this.tokenService.tokens;
 
-  filterBy: string | undefined;
+  filterBy!: string;
 
   /**
    * 
@@ -44,6 +42,8 @@ export class TokensPage {
 
   filterTokens = (q: string) => this.tokenService.filter(q);
 
+  newTokenModal = () => this.router.navigate(['add',]);
+
   async copyToClipboard(ev: any, string: string) {
     console.log(ev.srcElement);
     Clipboard.write({ string });
@@ -57,8 +57,6 @@ export class TokensPage {
 
     await toast.present();
   }
-
-  newTokenModal = () => this.router.navigate(['add',]);
 
   async presentActionSheet(t: Token) {
     const actionSheet = await this.actionSheetCtrl.create({

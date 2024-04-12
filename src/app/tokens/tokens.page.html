@@ -1,4 +1,4 @@
-<ion-content fullscreen="true" *ngIf="(tokens| async)?.length">
+<ion-content fullscreen="true" *ngIf="(tokens | async)?.length">
   <ion-card button appLongPress (appLongPressDo)="presentActionSheet(token)" *ngFor="let token of tokens | async">
     <ion-row class="ion-align-items-center">
       <ion-col>
@@ -16,7 +16,7 @@
         </ion-button>
       </ion-col>
     </ion-row>
-    <ion-progress-bar color="medium" [value]="token | progress| async"></ion-progress-bar>
+    <ion-progress-bar color="medium" [value]="token.period | timeout | async"></ion-progress-bar>
   </ion-card>
 </ion-content>
 <ion-footer id="footer" translucent="true" *ngIf="(tokens | async)?.length">

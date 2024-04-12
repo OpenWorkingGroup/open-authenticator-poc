@@ -13,6 +13,8 @@ import * as OTPAuth from 'otpauth';
  */
 export class Token extends OTPAuth.TOTP {
   
+  // otp: OTPAuth.TOTP | OTPAuth.HOTP;
+
   /**
    * Provides an instance specific timer based on 
    * the TOTP algorithm `TOTP = HOTP(K, T)`.
