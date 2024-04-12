@@ -1,14 +1,26 @@
 <ion-content fullscreen="true" *ngIf="(tokens | async)?.length">
-  <ion-card button appLongPress (appLongPressDo)="presentActionSheet(token)" *ngFor="let token of tokens | async">
+  <ion-card
+    button
+    appLongPress
+    (appLongPressDo)="presentActionSheet(token)"
+    *ngFor="let token of tokens | async"
+  >
     <ion-row class="ion-align-items-center">
       <ion-col>
         <ion-card-header>
           <ion-card-title>{{ token.issuer }}</ion-card-title>
-          <ion-card-subtitle>Valid for {{ token.timeout | async }} seconds</ion-card-subtitle> 
+          <ion-card-subtitle
+            >Valid for {{ token.timeout | async }} seconds</ion-card-subtitle
+          >
         </ion-card-header>
       </ion-col>
       <ion-col size="auto">
-        <ion-button fill="outline" shape="round" color="secondary" (click)="copyToClipboard($event, token.generate())">
+        <ion-button
+          fill="outline"
+          shape="round"
+          color="secondary"
+          (click)="copyToClipboard($event, token.generate())"
+        >
           <ion-icon name="copy-outline" slot="start"></ion-icon>
           Copy {{ token.generate() | token }}
           <!-- <ion-icon name="clipboard-outline" slot="start"></ion-icon> -->
@@ -16,12 +28,23 @@
         </ion-button>
       </ion-col>
     </ion-row>
-    <ion-progress-bar color="medium" [value]="token.period | timeout | async"></ion-progress-bar>
+    <ion-progress-bar
+      color="medium"
+      [value]="token.period | timeout | async"
+    ></ion-progress-bar>
   </ion-card>
 </ion-content>
 <ion-footer id="footer" translucent="true" *ngIf="(tokens | async)?.length">
   <ion-toolbar>
-    <ion-searchbar ngModel="filterBy" type="search" animated="true" inputmode="search" maxlength="25" placeholder="Search..." autocomplete="off"></ion-searchbar>
+    <ion-searchbar
+      ngModel="filterBy"
+      type="search"
+      animated="true"
+      inputmode="search"
+      maxlength="25"
+      placeholder="Search..."
+      autocomplete="off"
+    ></ion-searchbar>
     <ion-buttons slot="end">
       <ion-button (click)="newTokenModal()" fill="clear">
         <ion-icon slot="start" name="add-outline"></ion-icon>
@@ -32,19 +55,33 @@
 </ion-footer>
 
 <!-- Display startup screen when app inventory is empty -->
-<ion-content class="ion-activatable ripple-parent" (click)="newTokenModal()" *ngIf="!(tokens | async)?.length">
+<ion-content
+  class="ion-activatable ripple-parent"
+  (click)="newTokenModal()"
+  *ngIf="!(tokens | async)?.length"
+>
   <ion-ripple-effect></ion-ripple-effect>
   <div class="center-middle">
     <h1>Open Authenticator</h1>
-    <p><ion-text color="medium">The no frills multi factor authenticator.</ion-text></p>
+    <p>
+      <ion-text color="medium"
+        >The no frills multi factor authenticator.</ion-text
+      >
+    </p>
     <p><a href="/add">Tap anywhere start!</a></p>
   </div>
 </ion-content>
-<ion-footer class="startup-screen-footer" translucent="true" *ngIf="!(tokens | async)?.length">
+<ion-footer
+  class="startup-screen-footer"
+  translucent="true"
+  *ngIf="!(tokens | async)?.length"
+>
   <p>
     <ion-text color="medium">
       with <ion-icon color="secondary" name="heart-outline"></ion-icon> from the
-      <a href="https://www.openworkinggroup.org" title="" target="_blank">Open Working Group</a>
+      <a href="https://www.openworkinggroup.org" title="" target="_blank"
+        >Open Working Group</a
+      >
     </ion-text>
   </p>
 </ion-footer>

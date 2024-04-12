@@ -20,11 +20,12 @@ Linux: `flatpak install flathub open-authenticator`
 
 ### Vision
 
-Produce a simple, secure, open source multi-factor application. 
+Produce a simple, secure, open source multi-factor application.
 
 # Development Notes
 
 Frameworks:
+
 - Angular 17 - TypeScript MVC framework
 - Karma X - Testing framework
 - Ionic 7 - Mobile framework & design system/ components
@@ -32,48 +33,54 @@ Frameworks:
 - Electron Forge X - Desktop framework
 
 3rd party packages:
+
 - [OTPAuth](https://github.com/hectorm/otpauth) - TOTP/HOTP [GitHub](https://github.com/hectorm/otpauth), [Docs](https://hectorm.github.io/otpauth/index.html), [RFC](https://datatracker.ietf.org/doc/html/rfc6238#section-4)
 - dropzone? [NPM](https://www.npmjs.com/package/ngx-dropzone)
 - qr-scanner - [Git](https://github.com/nimiq/qr-scanner), [Demo](https://nimiq.github.io/qr-scanner/demo/)
 
 ## Development Requirements
+
 - [ionic cli](https://ionicframework.com/docs/angular/your-first-app): `npm install -g @ionic/cli native-run cordova-res`
 
 ## Build Requirements
-- adb (Android Debug Bridge)
-    - MacOS/brew `brew install android-platform-tools`
 
+- adb (Android Debug Bridge)
+  - MacOS/brew `brew install android-platform-tools`
 
 # Notes for desktop
+
 Asked in Ionic Discord channel. Solution provided by Kaoschuks
 
 # install and build project
+
     'npm i @capacitor-community/electron --force'
 
     'ionic build --prod --aot --release --optimization'
 
 # run electron app
+
     `npx cap add @capacitor-community/electron`
-    
+
     `npx cap sync @capacitor-community/electron`
-    
+
     `ionic cap open @capacitor-community/electron `
- 
- # build windows app
- npm run electron:win
- 
- # build macbook app
- npm run electron:mac
 
+# build windows app
 
- ## Model diagram
- Important features, labels, OTP Algorithm (HOTP/TOTP);
+npm run electron:win
 
- These tokens represent Accounts they need to access. Is this the identity?
+# build macbook app
+
+npm run electron:mac
+
+## Model diagram
+
+Important features, labels, OTP Algorithm (HOTP/TOTP);
+
+These tokens represent Accounts they need to access. Is this the identity?
 
 interface Account
 
- class Account
-    token: HOTP|TOTP instnace
-    labels: Array<string>
-
+class Account
+token: HOTP|TOTP instnace
+labels: Array<string>

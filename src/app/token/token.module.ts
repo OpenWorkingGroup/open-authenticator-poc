@@ -8,6 +8,6 @@ export { TokenService, Token };
 
 @NgModule({
   imports: [CommonModule],
-  providers: [TokenService]
+  providers: [TokenService],
 })
-export class TokenModule { }
+export class TokenModule {}

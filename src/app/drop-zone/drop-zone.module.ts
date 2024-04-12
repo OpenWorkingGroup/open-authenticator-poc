@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DropZoneDirective, DropZone } from '../drop-zone/drop-zone.directive';
 import { DropZoneService } from './drop-zone.service';
 
-export { DropZoneService, DropZone }
+export { DropZoneService, DropZone };
 
 /**
  * TODO: Describe this module.
@@ -12,6 +12,6 @@ export { DropZoneService, DropZone }
 @NgModule({
   declarations: [],
   imports: [CommonModule, DropZoneDirective],
-  exports: [DropZoneDirective]
+  exports: [DropZoneDirective],
 })
-export class DropZoneModule { }
+export class DropZoneModule {}

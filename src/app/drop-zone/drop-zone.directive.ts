@@ -2,7 +2,7 @@ import { Directive, Output, EventEmitter, HostListener } from '@angular/core';
 
 /**
  * Interface for interacting with the `DropZoneDirective` API.
- * 
+ *
  * @function `onDropZoneEnter` emits `dragover` events.
  * @function `onDropZoneExit` emits `dragleave` events.
  * @function `onDropZoneDropt` emits a `FileList`.
@@ -18,7 +18,6 @@ export interface DropZone {
  */
 @Directive({ selector: '[appDropZone]', standalone: true })
 export class DropZoneDirective {
-
   // @HostBinding('class.dropZoneActive') dropZoneActive = false;
 
   @Output() dropZoneEnter = new EventEmitter();

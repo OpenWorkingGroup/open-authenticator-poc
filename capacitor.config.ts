@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'Open Authenticator',
   webDir: 'www/browser',
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: 'https',
+  },
 };
 
 export default config;
