@@ -44,6 +44,10 @@ import {
   heartOutline,
   clipboardOutline,
   copyOutline,
+<<<<<<< HEAD
+=======
+  informationCircleOutline,
+>>>>>>> feature/dropzone-qr
 } from 'ionicons/icons';
 
 import { SharedServicesModule } from '../shared/shared.module';
@@ -107,9 +111,21 @@ export class TokensPage {
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
+<<<<<<< HEAD
     private router: Router,
   ) {
     addIcons({ addOutline, heartOutline, clipboardOutline, copyOutline });
+=======
+    private router: Router
+  ) {
+    addIcons({
+      addOutline,
+      heartOutline,
+      informationCircleOutline,
+      clipboardOutline,
+      copyOutline,
+    });
+>>>>>>> feature/dropzone-qr
   }
 
   filterTokens = (q: string) => this.tokenService.filter(q);

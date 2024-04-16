@@ -1,13 +1,22 @@
 import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 
 import {
   DropZoneModule,
   DropZoneService,
   DropZone,
 } from './drop-zone/drop-zone.module';
+=======
+>>>>>>> feature/dropzone-qr
 import { map, of } from 'rxjs';
+
+import {
+  DropZoneModule,
+  DropZoneService,
+  DropZone,
+} from './drop-zone/drop-zone.module';
 
 @Component({
   selector: 'app-root',

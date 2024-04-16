@@ -25,7 +25,9 @@ import {
 
 import { TokenService } from 'src/app/token/token.module';
 import { DropZoneService } from 'src/app/drop-zone/drop-zone.module';
+import QrScanner from 'qr-scanner';
 import { CommonModule } from '@angular/common';
+import { tap } from 'rxjs';
 
 /**
  * TODO: Finish detailing this component.
@@ -64,6 +66,7 @@ export class NewTokenComponent implements OnInit {
    * @param formBuilder
    * @param router
    */
+<<<<<<< HEAD
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -71,6 +74,24 @@ export class NewTokenComponent implements OnInit {
     this.dropZoneService.files.subscribe((files) =>
       this.uploadedFiles.set(files),
     );
+=======
+  constructor(private formBuilder: FormBuilder, private router: Router) {
+    this.dropZoneService.files
+      .pipe(
+        tap((files) =>
+          files.map((file) => {
+            console.log(file);
+            const scan = QrScanner.scanImage(file, {
+              returnDetailedScanResult: true,
+            });
+            // // otpauth://totp/totp@authenticationtest.com?secret=I65VU7K5ZQL7WB4E
+            // console.log(scan.data);
+          })
+        )
+        // tap((files) => console.log(files))
+      )
+      .subscribe((files) => this.uploadedFiles.set(files));
+>>>>>>> feature/dropzone-qr
   }
 
   ngOnInit(): void {

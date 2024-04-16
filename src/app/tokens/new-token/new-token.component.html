@@ -18,6 +18,7 @@
 </ion-header>
 <ion-content>
   <form [formGroup]="newAccountForm" (ngSubmit)="submitNewAccountForm()">
+<<<<<<< HEAD
     <ion-list>
       <ion-item>
         <ion-input
@@ -28,6 +29,12 @@
           formControlName="secret"
           pattern="[A-Z2-7]+=*"
         ></ion-input>
+=======
+    <ion-list lines="none"> 
+      <ion-item>
+        <ion-input label="Secret" type="text" placeholder="Application secret" errorText="Secret is required"
+          formControlName="secret" pattern="[A-Z2-7]+=*"></ion-input>
+>>>>>>> feature/dropzone-qr
       </ion-item>
       <ion-item>
         <ion-input

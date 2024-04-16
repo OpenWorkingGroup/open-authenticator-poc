@@ -1,3 +1,15 @@
+<ion-header [translucent]="true">
+  <ion-toolbar
+    ><ion-title>My Accounts</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="medium">
+        <ion-icon
+          slot="icon-only"
+          name="information-circle-outline"
+        ></ion-icon> </ion-button
+    ></ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content fullscreen="true" *ngIf="(tokens | async)?.length">
   <ion-card
     button
