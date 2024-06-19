@@ -1,44 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-<<<<<<< HEAD
-
-import {
-  DropZoneModule,
-  DropZoneService,
-  DropZone,
-} from './drop-zone/drop-zone.module';
-=======
->>>>>>> feature/dropzone-qr
 import { map, of } from 'rxjs';
 
-import {
-  DropZoneModule,
-  DropZoneService,
-  DropZone,
-} from './drop-zone/drop-zone.module';
+// import { NgxDropZoneModule } from 'ngx-drop-zone';
+
+import { DropZoneService, DropZoneModule } from './drop-zone/drop-zone.module';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   standalone: true,
-  imports: [IonApp, IonRouterOutlet, DropZoneModule],
+  imports: [CommonModule, IonApp, IonRouterOutlet, DropZoneModule]
 })
-export class AppComponent implements DropZone {
-  private readonly dzService = inject(DropZoneService);
-
+export class AppComponent {
+  private readonly dropzone = inject(DropZoneService);
   dropZoneActive = false;
 
   constructor(private router: Router) {}
 
-  // Toggle overlay visibility
+  // Toggle Dropzone overlay visibility
   onDropZoneEnter = () => !this.dropZoneActive;
   onDropZoneExit = () => !this.dropZoneActive;
 
-  // // Hand dropped files
-  onDropZoneDrop(files: File[]): void {
+  // Handle Dropzone dropped files
+  onDropZoneDrop = (files: File[]): void => {
     of(files)
-      .pipe(map((files: File[]) => this.dzService.files$.next(files)))
+      .pipe(map((files: File[]) => this.dropzone.files$.next(files)))
       .subscribe(() => this.router.navigate(['add']));
-  }
+  };
 }

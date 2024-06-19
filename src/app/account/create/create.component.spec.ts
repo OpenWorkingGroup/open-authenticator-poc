@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { NewTokenComponent } from './new-token.component';
+import { NewAccountComponent } from './create.component';
 
-describe('NewTokenComponent', () => {
-  let component: NewTokenComponent;
-  let fixture: ComponentFixture<NewTokenComponent>;
+describe('NewAccountComponent', () => {
+  let component: NewAccountComponent;
+  let fixture: ComponentFixture<NewAccountComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [NewTokenComponent],
+      imports: [NewAccountComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NewTokenComponent);
+    fixture = TestBed.createComponent(NewAccountComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

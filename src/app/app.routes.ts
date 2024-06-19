@@ -1,23 +1,21 @@
 import { Routes } from '@angular/router';
+import { ifNoAccountsExist } from './routes.guard';
 
 export const routes: Routes = [
   {
-    path: '',
-    title: 'MFA Tokens',
+    path: 'welcome',
+    title: 'Welcome!',
+    // canActivate: [ifNoAccountsExist],
     loadComponent: () =>
-      import('./tokens/tokens.page').then((m) => m.TokensPage),
+      import('./welcome/welcome.page').then((m) => m.WelcomePage)
   },
   {
-    path: 'add',
-    title: 'New MFA Account',
-    loadComponent: () =>
-      import('./tokens/new-token/new-token.component').then(
-        (m) => m.NewTokenComponent,
-      ),
+    path: 'account',
+    loadChildren: () =>
+      import('./account/account.module').then((m) => m.AccountModule)
   },
   {
-    path: '',
-    redirectTo: '',
-    pathMatch: 'full',
-  },
+    path: '**',
+    redirectTo: '/account'
+  }
 ];

@@ -29,7 +29,7 @@ export class Token extends OTPAuth.TOTP {
    * and OTPAuth.HOTP classes providing functional
    * accessors and modifiers.
    *
-   * Initializes token with TOTP defaults.
+   * Initialize token with TOTP defaults.
    * Override defaults by passing values as `token`.
    * @param token
    */

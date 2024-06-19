@@ -1,0 +1,29 @@
+<ion-card button appLongPress (appLongPressDo)="presentActionSheet()">
+  <ion-row class="ion-align-items-center">
+    <ion-col>
+      <ion-card-header>
+        <ion-card-title>{{ account().issuer }}</ion-card-title>
+        <ion-card-subtitle *ngIf="account().label">{{
+          account().label
+        }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-col>
+    <ion-col size="auto">
+      <ion-button
+        fill="outline"
+        shape="round"
+        color="secondary"
+        (click)="copyToClipboard($event, account().generate())"
+      >
+        <ion-icon name="copy-outline" slot="start"></ion-icon>
+        Copy {{ account().generate() | token }}
+        <!-- <ion-icon name="clipboard-outline" slot="start"></ion-icon> -->
+        <!-- Copied! -->
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-progress-bar
+    color="medium"
+    [value]="account().period | timeout | async"
+  ></ion-progress-bar>
+</ion-card>

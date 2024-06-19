@@ -1,23 +1,28 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Token } from 'src/app/token/token'; // TODO: I think we can be more generic in the filter?
+import { filter, overSome, keyBy } from 'lodash';
 
+/**
+ * TODO: Describe this and it's usage.
+ */
 @Pipe({
-  name: 'filter',
-  standalone: true,
-  pure: false, // TODO: Do we need this here?
+  name: 'fuzzyFilter',
+  standalone: true
 })
 export class FilterPipe implements PipeTransform {
   /**
    *
-   * @param Tokens[]
-   * @param query
+   * @param haystack
+   * @param needle
+   * @param properties
    * @returns
-   *
-   * TODO: Be more generic with input. Add the `parameters` argument to narrow down serach.
    */
-  transform(tt: Token[], q: string, property: string = 'issuer'): Token[] {
-    if (!q) return tt;
+  transform(haystack: any, needle: string, ...properties: string[]) {
+    if (!needle) return haystack;
 
-    return tt.filter((t) => t.issuer.toLowerCase().includes(q.toLowerCase()));
+    return haystack.filter((hay: any) => {
+      return properties.some((property) => {
+        return hay[property]?.toLowerCase().includes(needle);
+      });
+    });
   }
 }

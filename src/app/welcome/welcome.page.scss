@@ -1,6 +1,5 @@
-a {
-  text-decoration: none;
-  color: var(--ion-color-secondary);
+* {
+  cursor: pointer;
 }
 
 .dropzone {
@@ -16,6 +15,8 @@ a {
   }
 }
 
+// TODO: Cant this effect be acheived using
+// component layout?
 .center-middle {
   text-align: center;
 
@@ -36,7 +37,12 @@ ion-card-header {
   }
 }
 
-.startup-screen-footer {
-  font-size: 12px;
+ion-footer {
+  font-size: 0.8em;
   text-align: center;
+
+  a {
+    text-decoration: none;
+    color: var(--ion-color-secondary);
+  }
 }

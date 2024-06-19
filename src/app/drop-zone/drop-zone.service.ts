@@ -10,15 +10,8 @@ export class DropZoneService {
   readonly files$ = new Subject<File[]>();
 
   readonly files = this.files$.pipe(
-<<<<<<< HEAD
-    // take(1), // TODO:
-    map((files) =>
-      files.filter((file) => this.whitelist.includes(file.type.toLowerCase())),
-    ),
-=======
     map((files) =>
       files.filter((file) => this.whitelist.includes(file.type.toLowerCase()))
     )
->>>>>>> feature/dropzone-qr
   );
 }

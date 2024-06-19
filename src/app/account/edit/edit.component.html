@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Edit Account</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="updateAccount()" [strong]="true">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form [formGroup]="editAccountForm" (submit)="updateAccount()">
+    <ion-item>
+      <ion-input
+        label="Account"
+        type="text"
+        placeholder="Choose a name for this service"
+        errorText="Account name required"
+        formControlName="issuer"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input
+        label="Label"
+        type="text"
+        formControlName="label"
+        placeholder="Optionaly label this account"
+      ></ion-input>
+    </ion-item>
+  </form>
+</ion-content>
+
+<!-- <app-account [account]="account()" [id]="id()"></app-account> -->
