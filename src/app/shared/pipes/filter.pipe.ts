@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { filter, overSome, keyBy } from 'lodash';
 
 /**
  * TODO: Describe this and it's usage.
