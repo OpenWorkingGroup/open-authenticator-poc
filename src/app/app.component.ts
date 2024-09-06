@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
 import { map, of } from 'rxjs';
 
 // import { NgxDropZoneModule } from 'ngx-drop-zone';
 
 import { DropZoneService, DropZoneModule } from './drop-zone/drop-zone.module';
+import { AccountService } from './shared/services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -15,10 +15,10 @@ import { DropZoneService, DropZoneModule } from './drop-zone/drop-zone.module';
   imports: [CommonModule, IonApp, IonRouterOutlet, DropZoneModule]
 })
 export class AppComponent {
-  private readonly dropzone = inject(DropZoneService);
-  dropZoneActive = false;
+  readonly accounts = inject(AccountService).accounts;
+  readonly dropzone = inject(DropZoneService);
 
-  constructor(private router: Router) {}
+  dropZoneActive = false;
 
   // Toggle Dropzone overlay visibility
   onDropZoneEnter = () => !this.dropZoneActive;
@@ -28,6 +28,8 @@ export class AppComponent {
   onDropZoneDrop = (files: File[]): void => {
     of(files)
       .pipe(map((files: File[]) => this.dropzone.files$.next(files)))
-      .subscribe(() => this.router.navigate(['add']));
+      .subscribe(() => {
+        throw Error('Dropzone method not yet implemented.');
+      });
   };
 }

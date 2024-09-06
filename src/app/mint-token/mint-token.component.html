@@ -1,0 +1,50 @@
+<ion-modal
+  #modal
+  [canDismiss]="canDismiss"
+  (didDismiss)="didDismiss()"
+  trigger="createAccountModal"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start" (click)="modal.dismiss()">
+          <ion-button>Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>New Account</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="save()" [strong]="true">Save</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <app-token-uri (authKeyUri)="patchFromAuthKeyURI($event)" />
+      <form [formGroup]="newTokenForm" (ngSubmit)="save()">
+        <ion-item lines="none">
+          <ion-input
+            label="Secret"
+            formControlName="secret"
+            placeholder="Example: I65VU7K5ZQL7WB4E"
+            errorText="Secret is required"
+          >
+            <app-paste-button slot="end" (clipboard)="pasteAction($event)" />
+          </ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input
+            label="Account"
+            formControlName="issuer"
+            placeholder="Choose a name for this service"
+            errorText="Account name required"
+          />
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input
+            label="Label"
+            formControlName="label"
+            placeholder="Optionaly label this account"
+          />
+        </ion-item>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

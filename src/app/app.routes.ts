@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ifNoAccountsExist } from './routes.guard';
+import { ifAccountsExist, ifNoAccountsExist } from './routes.guard';
 
 export const routes: Routes = [
   {
@@ -10,12 +10,22 @@ export const routes: Routes = [
       import('./welcome/welcome.page').then((m) => m.WelcomePage)
   },
   {
-    path: 'account',
-    loadChildren: () =>
-      import('./account/account.module').then((m) => m.AccountModule)
+    path: 'mint',
+    title: 'Mint New Token',
+    loadComponent: () =>
+      import('./mint-token/mint-token.component').then(
+        (m) => m.MintTokenComponent
+      )
+  },
+  {
+    path: '',
+    title: 'Accounts',
+    // canActivate: [ifAccountsExist],
+    loadComponent: () =>
+      import('./accounts/accounts.page').then((m) => m.AccountsPage)
   },
   {
     path: '**',
-    redirectTo: '/account'
+    redirectTo: '/'
   }
 ];

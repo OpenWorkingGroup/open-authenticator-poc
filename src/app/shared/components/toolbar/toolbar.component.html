@@ -1,0 +1,21 @@
+<ion-footer id="footer" translucent="true">
+  <ion-toolbar>
+    <ion-searchbar
+      #query
+      type="search"
+      animated="true"
+      inputmode="search"
+      maxlength="25"
+      placeholder="Search..."
+      autocomplete="off"
+      (ionInput)="filter.emit(query.value ?? '')"
+      show-clear-button="always"
+    ></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" id="createAccountModal">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        New account
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

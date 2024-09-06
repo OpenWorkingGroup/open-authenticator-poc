@@ -1,0 +1,11 @@
+<ion-button
+  fill="outline"
+  shape="round"
+  color="secondary"
+  (click)="copyToClipboard($event, value())"
+>
+  <ion-icon name="copy-outline" slot="start"></ion-icon>
+  Copy {{ value() | token }}
+  <!-- <ion-icon name="clipboard-outline" slot="start"></ion-icon> -->
+  <!-- Copied! -->
+</ion-button>

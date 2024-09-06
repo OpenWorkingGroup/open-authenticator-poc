@@ -1,6 +1,6 @@
 {
   "name": "open-authenticator",
-  "displayName": "Auth#Waffle",
+  "displayName": "Open Authenticator",
   "description": "A no-frills, open source, multi-factor authentication app.",
   "version": "v1.0.0-alpha.1",
   "author": "Open Working Group",
@@ -34,7 +34,6 @@
     "@capacitor/status-bar": "6.0.0",
     "@ionic/angular": "^7.5.0",
     "ionicons": "^7.2.1",
-    "lodash": "^4.17.21",
     "otpauth": "^9.2.2",
     "qr-scanner": "^1.4.2",
     "rxjs": "~7.8.0",
@@ -54,7 +53,6 @@
     "@capacitor/cli": "6.0.0",
     "@ionic/angular-toolkit": "11.0.1",
     "@types/jasmine": "~5.1.0",
-    "@types/lodash": "^4.17.5",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^7.26.0",

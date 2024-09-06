@@ -21,7 +21,7 @@ export class FilterPipe implements PipeTransform {
 
     return haystack.filter((hay: any) => {
       return properties.some((property) => {
-        return hay[property]?.toLowerCase().includes(needle);
+        return hay[property]?.toLowerCase().includes(needle.toLowerCase());
       });
     });
   }

@@ -1,34 +1,17 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonText,
-  IonRippleEffect,
-  IonFooter,
-  IonIcon,
-} from '@ionic/angular/standalone';
-import { heartOutline } from 'ionicons/icons';
+
+import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
+import { heartOutline } from 'ionicons/icons';
+
+import { MintTokenComponent } from '../mint-token/mint-token.component';
 
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.page.html',
   styleUrls: ['./welcome.page.scss'],
   standalone: true,
-  imports: [
-    IonIcon,
-    IonFooter,
-    IonRippleEffect,
-    IonText,
-    IonContent,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
-    RouterLink,
-  ],
+  imports: [IonicModule, MintTokenComponent]
 })
 export class WelcomePage {
   constructor() {

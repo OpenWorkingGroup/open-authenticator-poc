@@ -1,0 +1,22 @@
+<form [formGroup]="authKeyUriForm">
+  <ion-item button lines="none">
+    <ion-toggle color="secondary" #useAuthKeyInput>
+      <ion-label>Have an authenticator key?</ion-label>
+      <ion-note color="medium"
+        >Authenticator keys look like web addresses
+      </ion-note>
+    </ion-toggle>
+  </ion-item>
+  <ion-item *ngIf="useAuthKeyInput.checked">
+    <ion-input
+      #authKeyUriInput
+      label="Key"
+      formControlName="authKeyUri"
+      [clearInput]="true"
+      placeholder="Paste authenticator key"
+      errorText="Invalid format"
+    >
+      <app-paste-button slot="end" (clipboard)="pasteAction($event)" />
+    </ion-input>
+  </ion-item>
+</form>
